@@ -7,7 +7,7 @@
 ;;; Code:
 
 ;; Produce backtraces when errors occur
-(setq debug-on-error t)
+;; (setq debug-on-error t)
 
 (let ((minver "24.4"))
   (when (version< emacs-version minver)
@@ -145,9 +145,9 @@
   (maybe-require-package 'daemons))
 (maybe-require-package 'dotenv-mode)
 
-(when (maybe-require-package 'uptimes)
-  (setq-default uptimes-keep-count 200)
-  (add-hook 'after-init-hook (lambda () (require 'uptimes))))
+;; (when (maybe-require-package 'uptimes)
+;;   (setq-default uptimes-keep-count 200)
+;;   (add-hook 'after-init-hook (lambda () (require 'uptimes))))
 
 
 ;;----------------------------------------------------------------------------
