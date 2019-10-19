@@ -16,6 +16,7 @@
   (message "Your Emacs is old, and some functionality in this config will be disabled. Please upgrade if possible."))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
 (require 'init-benchmarking) ;; Measure startup time
 
 (defconst *spell-check-support-enabled* nil) ;; Enable with t if you prefer
@@ -176,7 +177,43 @@
 ;;----------------------------------------------------------------------------
 (require 'init-local nil t)
 
+(require 'init-tramp)
+(when (version<= emacs-version "22.1" )
+  (require 'init-color-theme)
+  )
+(require 'init-web-mode)
+(require 'init-go)
+(require 'init-cscope)
+(require 'init-ecb)
+(require 'init-dictionary)
+;; (require 'init-auto-complete)
+(require 'init-cedet)
+(require 'init-evil)
+;; If you really prefer ido to ivy, change the comments below. I will
+;; likely remove the ido config in due course, though.
+;; (require 'init-ido)
+(require 'init-ggtags)
+(require 'init-yasnippet)
+(require 'init-fullscreen)
 
+;; private
+(require 'init-private)
+
+(add-hook
+ 'after-init-hook
+ (lambda ()
+   (message "init completed in %.2fms"
+            (sanityinc/time-subtract-millis after-init-time before-init-time))))
+
+;;----------------------------------------------------------------------------
+;; Allow access from emacsclient
+;;----------------------------------------------------------------------------
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+
+(when (maybe-require-package 'uptimes)
+  (add-hook 'after-init-hook (lambda () (require 'uptimes))))
 
 (provide 'init)
 
