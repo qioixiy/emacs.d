@@ -28,6 +28,30 @@
 (when (and (version< emacs-version "26.3") (boundp 'libgnutls-version) (>= libgnutls-version 30604))
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
+;; We include the org repository for completeness, but don't normally
+;; use it.
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+
+
+(defconst sanityinc/no-ssl (and (memq system-type '(windows-nt ms-dos))
+                                (not (gnutls-available-p))))
+
+;;; Also use Melpa for most packages
+(add-to-list 'package-archives
+             `("melpa" . ,(if sanityinc/no-ssl
+                              "http://melpa.org/packages/"
+                            "https://melpa.org/packages/")))
+
+(unless sanityinc/no-ssl
+  ;; Force SSL for GNU ELPA
+  (setcdr (assoc "gnu" package-archives) "https://elpa.gnu.org/packages/"))
+
+;; NOTE: In case of MELPA problems, the official mirror URL is
+;; https://www.mirrorservice.org/sites/stable.melpa.org/packages/
+
+(setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+			 ("melpa" . "http://elpa.emacs-china.org/melpa/")))
+
 
 ;;; On-demand installation of packages
 
@@ -111,6 +135,8 @@ locate PACKAGE."
 
 (add-hook 'package-menu-mode-hook 'sanityinc/maybe-widen-package-menu-columns)
 
+(setq package-archives '(("gnu" . "http://elpa.emacs-china.org/gnu/")
+                         ("melpa" . "http://elpa.emacs-china.org/melpa/")))
 
 (provide 'init-elpa)
 ;;; init-elpa.el ends here
